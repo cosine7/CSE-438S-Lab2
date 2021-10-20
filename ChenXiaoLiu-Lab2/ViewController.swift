@@ -24,11 +24,9 @@ class ViewController: UIViewController {
     private let fish = Pet("fish", "purple", "fishSound", "fishEating")
     
     private var pet: Pet! = nil
-    let layer = CAEmitterLayer()
-    let cell = CAEmitterCell()
-    var audioPlayer: AVAudioPlayer?
-    let congratulationAudio = NSDataAsset(name: "congratulationSound")!
-
+    private let layer = CAEmitterLayer()
+    private let cell = CAEmitterCell()
+    private var audioPlayer: AVAudioPlayer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -46,7 +44,7 @@ class ViewController: UIViewController {
     }
     
     private func configureViews(_ currentPet: Pet) {
-        if (pet === currentPet) {
+        if pet === currentPet {
             return
         }
         pet = currentPet
@@ -114,9 +112,15 @@ class ViewController: UIViewController {
         makeSound(pet.audio.data)
         pet.happiness += 1
         if pet.happiness == 11 {
-            makeSound(congratulationAudio.data)
+            makeSound(NSDataAsset(name: "congratulationSound")!.data)
             view.layer.addSublayer(layer)
-            Timer.scheduledTimer(timeInterval: 4.0, target: self, selector: #selector(fireTimer), userInfo: nil, repeats: false)
+            Timer.scheduledTimer(
+                timeInterval: 4.0,
+                target: self,
+                selector: #selector(fireTimer),
+                userInfo: nil,
+                repeats: false
+            )
             pet.happiness = 0
             pet.level += 1
             setLevel()
