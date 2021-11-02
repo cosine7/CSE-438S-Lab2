@@ -41,9 +41,36 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		5018E4D92730E51C008D855B /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				502CDD3826FBE63900EC8751 /* ViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		5018E4DA2730E562008D855B /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				502CDD4C26FC259E00EC8751 /* Pet.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		5018E4DB2730E57C008D855B /* View */ = {
+			isa = PBXGroup;
+			children = (
+				502CDD4A26FC226200EC8751 /* DisplayView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
 		502CDD2826FBE63900EC8751 = {
 			isa = PBXGroup;
 			children = (
+				5018E4DB2730E57C008D855B /* View */,
+				5018E4DA2730E562008D855B /* Model */,
+				5018E4D92730E51C008D855B /* Controller */,
 				502CDD3326FBE63900EC8751 /* ChenXiaoLiu-Lab2 */,
 				502CDD3226FBE63900EC8751 /* Products */,
 			);
@@ -60,15 +87,12 @@
 		502CDD3326FBE63900EC8751 /* ChenXiaoLiu-Lab2 */ = {
 			isa = PBXGroup;
 			children = (
-				502CDD4A26FC226200EC8751 /* DisplayView.swift */,
 				502CDD3426FBE63900EC8751 /* AppDelegate.swift */,
 				502CDD3626FBE63900EC8751 /* SceneDelegate.swift */,
-				502CDD3826FBE63900EC8751 /* ViewController.swift */,
 				502CDD3A26FBE63900EC8751 /* Main.storyboard */,
 				502CDD3D26FBE63A00EC8751 /* Assets.xcassets */,
 				502CDD3F26FBE63A00EC8751 /* LaunchScreen.storyboard */,
 				502CDD4226FBE63A00EC8751 /* Info.plist */,
-				502CDD4C26FC259E00EC8751 /* Pet.swift */,
 			);
 			path = "ChenXiaoLiu-Lab2";
 			sourceTree = "<group>";
