@@ -25,7 +25,7 @@ class DisplayView: UIView {
     }
     
     /// The color of the display bar.
-    public var color: UIColor = .black {
+    public var color: UIColor? {
         didSet { self.valueView.backgroundColor = color }
     }
     
@@ -51,7 +51,6 @@ class DisplayView: UIView {
     }
     
     private func setup() {
-//        self.backgroundColor = UIColor(white: 0.9, alpha: 1)
         self.valueView.backgroundColor = color
         self.addSubview(self.valueView)
     }

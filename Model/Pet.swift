@@ -9,20 +9,20 @@ import Foundation
 import UIKit
 
 class Pet {
-    let image: UIImage!
-    let color: UIColor!
+    let image: UIImage?
+    let color: UIColor?
     var playCount = 0
     var fedCount = 0
     var happiness: CGFloat = 0
     var level = 1
     var foodLevel: CGFloat = 0
-    let audio: NSDataAsset!
-    let eatingAudio: NSDataAsset!
+    let playSound: String
+    let eatingSound: String
     
-    init(_ imageName: String, _ colorName: String, _ audioName: String, _ eatingAudioName: String) {
-        self.image = UIImage(named: imageName)
-        self.color = UIColor(named: colorName)
-        audio = NSDataAsset(name: audioName)
-        eatingAudio = NSDataAsset(name: eatingAudioName)
+    init(_ image: String, _ color: String, _ playSound: String, _ eatingSound: String) {
+        self.image = UIImage(named: image)
+        self.color = UIColor(named: color)
+        self.playSound = playSound
+        self.eatingSound = eatingSound
     }
 }

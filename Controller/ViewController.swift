@@ -23,16 +23,14 @@ class ViewController: UIViewController {
     private let bunny = Pet("bunny", "green", "rabbitSound", "rabbitEating")
     private let fish = Pet("fish", "purple", "fishSound", "fishEating")
     
-    private var pet: Pet! = nil
-    private let layer = CAEmitterLayer()
-    private let cell = CAEmitterCell()
-    private var audioPlayer: AVAudioPlayer?
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        configureViews(dog)
-        // Learned from https://www.youtube.com/watch?v=YosPD7eFvcE
-        layer.emitterPosition = CGPoint(x: view.center.x, y: 0)
+    private var pet: Pet {
+        didSet {
+            configureViews()
+        }
+    }
+    
+    private lazy var layer: CAEmitterLayer = {
+        let cell = CAEmitterCell()
         cell.scale = 0.1
         cell.birthRate = 8
         cell.velocity = 200
@@ -40,14 +38,26 @@ class ViewController: UIViewController {
         cell.lifetime = 5
         cell.emissionRange = .pi
         cell.emissionLongitude = .pi
+        
+        let layer = CAEmitterLayer()
+        layer.emitterPosition = CGPoint(x: view.center.x, y: 0)
         layer.emitterCells = [cell]
+        return layer
+    } ()
+    
+    private var audioPlayer: AVAudioPlayer?
+    
+    required init?(coder: NSCoder) {
+        pet = dog
+        super.init(coder: coder)
     }
     
-    private func configureViews(_ currentPet: Pet) {
-        if pet === currentPet {
-            return
-        }
-        pet = currentPet
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        configureViews()
+    }
+    
+    private func configureViews() {
         imageView.image = pet.image
         topView.backgroundColor = pet.color
         happinessBar.color = pet.color
@@ -71,56 +81,42 @@ class ViewController: UIViewController {
         levelLabel.text = "Lv. \(pet.level)"
     }
     
-    private func makeSound(_ data: Data) {
-        // Learned from https://stackoverflow.com/questions/51690084/playing-audio-in-asset-library
-        do {
-            audioPlayer = try AVAudioPlayer(data: data, fileTypeHint:"wav")
-            audioPlayer?.play()
-        } catch {
-            fatalError(error.localizedDescription)
+    private func makeSound(_ name: String) {
+        guard let sound = NSDataAsset(name: name) else { return }
+        audioPlayer = try? AVAudioPlayer(data: sound.data, fileTypeHint: "wav")
+        audioPlayer?.play()
+    }
+    
+    @IBAction func petSelected(_ sender: UIButton) {
+        guard let selectedPet = sender.restorationIdentifier else { return }
+        switch selectedPet {
+        case "dog":
+            pet = dog
+        case "cat":
+            pet = cat
+        case "bird":
+            pet = bird
+        case "bunny":
+            pet = bunny
+        case "fish":
+            pet = fish
+        default:
+            break
         }
-    }
-    
-    @IBAction func dogButtonPressed(_ sender: Any) {
-        configureViews(dog)
-    }
-    
-    @IBAction func catButtonPressed(_ sender: Any) {
-        configureViews(cat)
-    }
-    
-    @IBAction func birdButtonPressed(_ sender: Any) {
-        configureViews(bird)
-    }
-    
-    @IBAction func bunnyButtonPressed(_ sender: Any) {
-        configureViews(bunny)
-    }
-    
-    @IBAction func fishButtonPressed(_ sender: Any) {
-        configureViews(fish)
-    }
-    
-    @objc func fireTimer() {
-        layer.removeFromSuperlayer()
     }
     
     @IBAction func playButtonPressed(_ sender: Any) {
         if pet.foodLevel == 0 {
             return
         }
-        makeSound(pet.audio.data)
+        makeSound(pet.playSound)
         pet.happiness += 1
         if pet.happiness == 11 {
-            makeSound(NSDataAsset(name: "congratulationSound")!.data)
+            makeSound("congratulationSound")
             view.layer.addSublayer(layer)
-            Timer.scheduledTimer(
-                timeInterval: 4.0,
-                target: self,
-                selector: #selector(fireTimer),
-                userInfo: nil,
-                repeats: false
-            )
+            DispatchQueue.main.asyncAfter(deadline: .now() + 4) {
+                self.layer.removeFromSuperlayer()
+            }
             pet.happiness = 0
             pet.level += 1
             setLevel()
@@ -135,7 +131,7 @@ class ViewController: UIViewController {
         if pet.foodLevel == 10 {
             return
         }
-        makeSound(pet.eatingAudio.data)
+        makeSound(pet.eatingSound)
         pet.foodLevel += 1
         pet.fedCount += 1
         setFoodLevel()
